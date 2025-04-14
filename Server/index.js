@@ -1,10 +1,19 @@
 const express = require("express");
-
-//middleware
 const app = express();
+const port = 4000;
+const cors = require("cors");
+const UserRoute = require("./routes/UserRoute");
+app.use(express.json());
 
-const PORT = 5000;
-
-app.listen(PORT, () => {
-  console.log(`server is running on ${PORT}`);
+app.use(cors());
+const mongoose = require("mongoose");
+app.use(UserRoute);
+mongoose
+  .connect(
+    "mongodb+srv://krgarav:9800664253@cluster0.tjvtu0m.mongodb.net/rentrr?retryWrites=true&w=majority&appName=Cluster0"
+  )
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+app.listen(port, () => {
+  console.log(`Server is running on PORT ${port}`);
 });
