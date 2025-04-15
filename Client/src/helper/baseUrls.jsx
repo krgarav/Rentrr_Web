@@ -21,3 +21,13 @@ export const loginUser = async ({ email, password }) => {
   );
   return res.data;
 };
+export const logoutUser = async () => {
+  const res = await axios.get(
+    `${BaseUrl}/logout-user`,
+
+    {
+      withCredentials: true, // Make sure credentials (cookies) are sent with the request
+    }
+  );
+  return res.data;
+};

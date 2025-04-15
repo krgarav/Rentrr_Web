@@ -21,8 +21,10 @@ export function SignIn() {
       {
         onSuccess: (data) => {
           console.log("✅ Got this from backend:", data);
-          toast.success("Logged In Successfully");
-          // navigate("/dashboard/home");
+
+          setTimeout(() => {
+            window.location.reload(); // OR trigger a fresh call to useTokenRedirect
+          }, 100);
         },
         onError: (error) => {
           console.error(
