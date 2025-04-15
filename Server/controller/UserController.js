@@ -11,7 +11,7 @@ exports.registerUser = async (req, res) => {
 
     const { token } = formdata;
     const { firstName, lastName, password } = formdata.formData;
-    
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const email = decoded.email;
     const user = await User.findOne({ email });
@@ -56,10 +56,17 @@ exports.authenticateUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" } // or "7d", etc.
     );
+    // ✅ Send token in cookie instead of body
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // only use HTTPS in prod
+      sameSite: "Strict", // or 'Lax' if needed
+      maxAge: 1000 * 60 * 60, // 1 hour
+    });
 
     res.status(200).json({
       success: true,
-      token,
+      message: "Login successful",
     });
   } catch (error) {
     console.error(error);

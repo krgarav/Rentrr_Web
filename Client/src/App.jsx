@@ -7,53 +7,55 @@ import {
 } from "react-router-dom";
 import { Dashboard, Auth } from "@/layouts";
 import { SignIn } from "./pages/auth";
-import RentTable from "./pages/dashboard/RentTable";
+import { useTokenRedirect } from "./component/useTokenRedirect";
+import ProtectedRoute from "./component/ProtectedRoute";
+import { useEffect, useState } from "react";
 
 function App() {
-  const useTokenRedirect = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  // ⬅️ Call the auth check hook
+  useTokenRedirect(setUser);
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard/home", { replace: true });
+    } else {
+      navigate("/signin", { replace: true });
+    }
+  }, [user]);
 
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          if (decoded.Role === "Operator") {
-            if (location.pathname.includes("operator")) {
-              navigate(location.pathname);
-            } else {
-              navigate("/operator/index", { replace: true });
-            }
-          } else if (decoded.Role === "Admin") {
-            if (location.pathname.includes("admin")) {
-              navigate(location.pathname);
-            } else {
-              navigate("/admin/index", { replace: true });
-            }
-          } else if (decoded.Role === "Moderator") {
-            if (location.pathname.includes("moderator")) {
-              navigate(location.pathname);
-            } else {
-              navigate("/moderator/index", { replace: true });
-            }
-          }
-        } catch (error) {
-          console.error("Invalid token:", error);
-          navigate("/auth/login", { replace: true });
-        }
-      } else {
-        navigate("/auth/login", { replace: true });
-      }
-    }, []);
-  };
   return (
     <Routes>
-      <Route path="/*" element={<SignIn />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
-      {/* <Route path="/dashboard/tables/rentTable" element={<RentTable />} /> */}
+      {/* Public Route */}
+      <Route path="/signin" element={<SignIn />} />
+
+      {/* Protected Route */}
+      <Route
+        path="/dashboard/*"
+        element={
+          <ProtectedRoute user={user}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Optional: Auth page or signup */}
       <Route path="/auth/*" element={<Auth />} />
-      <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+
+      {/* Default redirect based on user state */}
+      <Route
+        path="/"
+        element={
+          user ? (
+            <Navigate to="/dashboard/home" replace />
+          ) : (
+            <Navigate to="/signin" replace />
+          )
+        }
+      />
+
+      {/* Catch all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

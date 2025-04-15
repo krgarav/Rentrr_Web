@@ -10,3 +10,14 @@ export const registerUser = async (formdata, token) => {
   const res = await axios.post(`${BaseUrl}/register`, { formdata, token });
   return res.data;
 };
+
+export const loginUser = async ({ email, password }) => {
+  const res = await axios.post(
+    `${BaseUrl}/login-user`,
+    { email, password },
+    {
+      withCredentials: true, // Make sure credentials (cookies) are sent with the request
+    }
+  );
+  return res.data;
+};

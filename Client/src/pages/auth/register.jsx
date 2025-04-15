@@ -8,6 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export function Register() {
   const [formData, setFormData] = useState({
@@ -40,7 +41,8 @@ export function Register() {
       {
         onSuccess: (data) => {
           console.log("✅ Got this from backend:", data);
-          toast.success("Email sent!");
+          toast.success("Registered User Successfully");
+          navigate("/auth/sign-in", { replace: true });
           // Handle success (e.g., show a success message)
         },
         onError: (error) => {
@@ -48,10 +50,7 @@ export function Register() {
             "❌ Failed to send:",
             error.response?.data || error.message
           );
-          toast.error(
-            "❌ Failed to send:",
-            error.response?.data || error.message
-          );
+          toast.error(error.response?.data?.message || error.message);
         },
       }
     );

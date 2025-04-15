@@ -3,9 +3,15 @@ const app = express();
 const port = 4000;
 const cors = require("cors");
 const UserRoute = require("./routes/UserRoute");
+const cookieParser = require("cookie-parser");
 app.use(express.json());
-
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 const mongoose = require("mongoose");
 app.use(UserRoute);
 mongoose
