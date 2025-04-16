@@ -59,9 +59,9 @@ exports.authenticateUser = async (req, res) => {
     // ✅ Send token in cookie instead of body
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only use HTTPS in prod
-      sameSite: "Strict", // or 'Lax' if needed
-      maxAge: 1000 * 60 * 60, // 1 hour
+      secure: true, // required for HTTPS
+      sameSite: "Lax", // or "Strict"
+      maxAge: 1000 * 60 * 60,
     });
 
     res.status(200).json({
