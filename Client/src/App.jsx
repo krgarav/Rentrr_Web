@@ -20,6 +20,8 @@ function App() {
   useEffect(() => {
     if (user) {
       navigate("/dashboard/home", { replace: true });
+    } else if (location.pathname.includes("register")) {
+      // do nothing
     } else {
       navigate("/signin", { replace: true });
     }
