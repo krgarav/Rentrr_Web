@@ -1,5 +1,5 @@
 import axios from "axios";
-const BaseUrl = "http://localhost:4000";
+const BaseUrl = "https://rentrr-web.onrender.com";
 export const sendVerificationEmail = async ({ email }) => {
   const res = await axios.post(`${BaseUrl}/verify`, {
     email,
