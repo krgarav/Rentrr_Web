@@ -16,24 +16,10 @@ export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [trigger, setTrigger] = useState(false);
-  const { mutate } = useLoginUser();
+  const { mutate, isPending } = useLoginUser();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const checkSession = async () => {
-  //     try {
-  //       const res = await axios.get(`${BaseUrl}/api/auth/me`, {
-  //         withCredentials: true,
-  //       });
-  //       console.log("✅ Logged in user:", res.data.user);
-  //       navigate("/dashboard");
-  //     } catch {
-  //       console.log("⛔ Not logged in");
-  //     }
-  //   };
-
-  //   checkSession();
-  // }, [trigger]);
+ 
 
   const signinHandler = () => {
     mutate(
@@ -54,7 +40,7 @@ export function SignIn() {
               console.error("🔴 Session check failed:", err);
               toast.error("Login succeeded but session not detected.");
             }
-          }, 1000);
+          }, 0);
         },
         onError: (error) => {
           console.error(
@@ -67,6 +53,7 @@ export function SignIn() {
     );
     // navigate("/dashboard",{replace:true})
   };
+
   return (
     <section className="m-8 flex gap-4">
       <div className="w-full lg:w-3/5 mt-24">
@@ -140,8 +127,13 @@ export function SignIn() {
             }
             containerProps={{ className: "-ml-2.5" }}
           />
-          <Button onClick={signinHandler} className="mt-6" fullWidth>
-            Sign In
+          <Button
+            onClick={signinHandler}
+            disabled={isPending}
+            className="mt-6"
+            fullWidth
+          >
+            {isPending ? "Signing In" : "Sign In"}
           </Button>
 
           <div className="flex items-center justify-between gap-2 mt-6">
