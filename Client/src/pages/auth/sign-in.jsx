@@ -1,3 +1,4 @@
+import { BaseUrl } from "@/helper/baseUrls";
 import { useLoginUser } from "@/helper/urlHelper";
 import {
   Card,
@@ -7,15 +8,33 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [trigger, setTrigger] = useState(false);
   const { mutate } = useLoginUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await axios.get(`${BaseUrl}/api/auth/me`, {
+          withCredentials: true,
+        });
+        console.log("✅ Logged in user:", res.data.user);
+        navigate("/dashboard");
+      } catch {
+        console.log("⛔ Not logged in");
+      }
+    };
+
+    checkSession();
+  }, [trigger]);
+
   const signinHandler = () => {
     mutate(
       { email, password },
@@ -23,33 +42,9 @@ export function SignIn() {
         onSuccess: (data) => {
           console.log("✅ Got this from backend:", data);
 
-          let tries = 0;
-          const maxTries = 10;
-
-          const checkToken = async () => {
-            try {
-              const res = await axios.get("https://rentrr-web.onrender.com/api/auth/me", {
-                withCredentials: true,
-              });
-              if (res.status === 200) {
-                console.log("🟢 Token confirmed, user:", res.data.user);
-                // Now safe to reload or navigate
-                window.location.reload(); // or navigate("/dashboard")
-              }
-            } catch (err) {
-              tries++;
-              if (tries < maxTries) {
-                setTimeout(checkToken, 200); // try again in 200ms
-              } else {
-                console.error(
-                  "🔴 Token was not saved after multiple attempts."
-                );
-                toast.error("Login failed. Please try again.");
-              }
-            }
-          };
-
-          checkToken();
+          setTimeout(async () => {
+            setTrigger((prev) => !prev);
+          }, 5000);
         },
         onError: (error) => {
           console.error(

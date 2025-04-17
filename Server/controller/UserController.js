@@ -217,6 +217,8 @@ exports.verifyEmail = async (req, res) => {
 // GET /api/auth/me
 exports.getCurrentUser = (req, res) => {
   const token = req.cookies.token;
+  console.log(token);
+  console.log(req)
   if (!token) return res.status(401).json({ message: "Not authenticated" });
 
   try {
