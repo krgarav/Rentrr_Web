@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*", // 🚫 Will throw error if credentials: true
+    origin: ["https://rentrr.netlify.app","http://localhost:5173"],
     credentials: true,
   })
 );

@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import axios from "axios";
+import { BaseUrl } from "@/helper/baseUrls";
 
-const BaseUrl = "https://rentrr-web.onrender.com";
+
 export const useTokenRedirect = (setUser) => {
   useEffect(() => {
     const checkAuth = async () => {

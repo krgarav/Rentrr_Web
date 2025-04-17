@@ -59,8 +59,8 @@ exports.authenticateUser = async (req, res) => {
     // ✅ Send token in cookie instead of body
     res.cookie("token", token, {
       httpOnly: true,
-      // secure: true, // required for HTTPS
-      // sameSite: "Lax", // or "Strict"
+      secure: true, // required for HTTPS
+      sameSite: "Lax", // or "Strict"
       maxAge: 1000 * 60 * 60,
     });
 
