@@ -28,7 +28,7 @@ export function SignIn() {
 
           const checkToken = async () => {
             try {
-              const res = await axios.get("/api/auth/me", {
+              const res = await axios.get("https://rentrr-web.onrender.com/api/auth/me", {
                 withCredentials: true,
               });
               if (res.status === 200) {
