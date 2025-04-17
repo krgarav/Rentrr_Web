@@ -58,9 +58,9 @@ exports.authenticateUser = async (req, res) => {
     );
     // ✅ Send token in cookie instead of body
     res.cookie("token", token, {
-      // httpOnly: true,
-      // secure: true, // required for HTTPS
-      // sameSite: "Lax", // or "Strict"
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
       maxAge: 1000 * 60 * 60,
     });
 
@@ -212,7 +212,6 @@ exports.verifyEmail = async (req, res) => {
     return res.status(400).send("Invalid or expired token.");
   }
 };
-
 
 // GET /api/auth/me
 exports.getCurrentUser = (req, res) => {
