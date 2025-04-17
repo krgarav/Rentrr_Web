@@ -212,3 +212,17 @@ exports.verifyEmail = async (req, res) => {
     return res.status(400).send("Invalid or expired token.");
   }
 };
+
+
+// GET /api/auth/me
+exports.getCurrentUser = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json({ user: decoded }); // or fetch full user from DB
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};

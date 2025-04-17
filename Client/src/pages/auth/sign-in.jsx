@@ -6,6 +6,7 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -22,10 +23,33 @@ export function SignIn() {
         onSuccess: (data) => {
           console.log("✅ Got this from backend:", data);
 
+          let tries = 0;
+          const maxTries = 10;
 
-          setTimeout(() => {
-            window.location.reload(); // OR trigger a fresh call to useTokenRedirect
-          }, 100);
+          const checkToken = async () => {
+            try {
+              const res = await axios.get("/api/auth/me", {
+                withCredentials: true,
+              });
+              if (res.status === 200) {
+                console.log("🟢 Token confirmed, user:", res.data.user);
+                // Now safe to reload or navigate
+                window.location.reload(); // or navigate("/dashboard")
+              }
+            } catch (err) {
+              tries++;
+              if (tries < maxTries) {
+                setTimeout(checkToken, 200); // try again in 200ms
+              } else {
+                console.error(
+                  "🔴 Token was not saved after multiple attempts."
+                );
+                toast.error("Login failed. Please try again.");
+              }
+            }
+          };
+
+          checkToken();
         },
         onError: (error) => {
           console.error(

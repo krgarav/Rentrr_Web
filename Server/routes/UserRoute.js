@@ -15,5 +15,7 @@ router.get("/check-auth", authenticateToken, (req, res) => {
     user: req.user, // this will have id, email, role etc. from the token
   });
 });
+router.get("/api/auth/me", UserController.getCurrentUser);
+
 
 module.exports = router;
