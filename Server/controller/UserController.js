@@ -59,8 +59,8 @@ exports.authenticateUser = async (req, res) => {
     // ✅ Send token in cookie instead of body
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // required for HTTPS
-      sameSite: "Lax", // or "Strict"
+      // secure: true, // required for HTTPS
+      // sameSite: "Lax", // or "Strict"
       maxAge: 1000 * 60 * 60,
     });
 
@@ -76,9 +76,9 @@ exports.authenticateUser = async (req, res) => {
 
 exports.logoutUser = (req, res) => {
   res.clearCookie("token", {
-    // httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "Strict",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
   });
 
   res.status(200).json({ message: "Logged out successfully" });

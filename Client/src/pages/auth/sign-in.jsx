@@ -19,21 +19,21 @@ export function SignIn() {
   const { mutate } = useLoginUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const res = await axios.get(`${BaseUrl}/api/auth/me`, {
-          withCredentials: true,
-        });
-        console.log("✅ Logged in user:", res.data.user);
-        navigate("/dashboard");
-      } catch {
-        console.log("⛔ Not logged in");
-      }
-    };
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     try {
+  //       const res = await axios.get(`${BaseUrl}/api/auth/me`, {
+  //         withCredentials: true,
+  //       });
+  //       console.log("✅ Logged in user:", res.data.user);
+  //       navigate("/dashboard");
+  //     } catch {
+  //       console.log("⛔ Not logged in");
+  //     }
+  //   };
 
-    checkSession();
-  }, [trigger]);
+  //   checkSession();
+  // }, [trigger]);
 
   const signinHandler = () => {
     mutate(
@@ -43,7 +43,16 @@ export function SignIn() {
           console.log("✅ Got this from backend:", data);
 
           setTimeout(async () => {
-            setTrigger((prev) => !prev);
+            try {
+              const res = await axios.get(`${BaseUrl}/api/auth/me`, {
+                withCredentials: true,
+              });
+              console.log("🟢 Token confirmed, user:", res.data.user);
+              navigate("/dashboard");
+            } catch (err) {
+              console.error("🔴 Session check failed:", err);
+              toast.error("Login succeeded but session not detected.");
+            }
           }, 5000);
         },
         onError: (error) => {
