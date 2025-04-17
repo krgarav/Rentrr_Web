@@ -77,8 +77,8 @@ exports.authenticateUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    secure: true,
+    sameSite: "None",
   });
 
   res.status(200).json({ message: "Logged out successfully" });

@@ -48,12 +48,13 @@ export function SignIn() {
                 withCredentials: true,
               });
               console.log("🟢 Token confirmed, user:", res.data.user);
-              navigate("/dashboard");
+              window.location.reload();
+              // navigate("/dashboard");
             } catch (err) {
               console.error("🔴 Session check failed:", err);
               toast.error("Login succeeded but session not detected.");
             }
-          }, 5000);
+          }, 1000);
         },
         onError: (error) => {
           console.error(
