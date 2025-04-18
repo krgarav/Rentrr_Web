@@ -11,10 +11,12 @@ import { useTokenRedirect } from "./component/useTokenRedirect";
 import ProtectedRoute from "./component/ProtectedRoute";
 import { useEffect, useState } from "react";
 import CookieConsent from "react-cookie-consent";
+import Loader from "./component/Loader";
 
 function App() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
   // ⬅️ Call the auth check hook
   useTokenRedirect(setUser);
   useEffect(() => {
@@ -39,6 +41,7 @@ function App() {
       </CookieConsent>
       <Routes>
         {/* Public Route */}
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
 
         {/* Protected Route */}
@@ -66,6 +69,8 @@ function App() {
           }
         />
         {/* Catch all */}
+        <Route path="/loader" element={<Loader />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

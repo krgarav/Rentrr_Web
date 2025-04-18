@@ -227,3 +227,15 @@ exports.getCurrentUser = (req, res) => {
     res.status(401).json({ message: "Invalid token" });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select("-password -__v"); // Exclude password and __v field
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+

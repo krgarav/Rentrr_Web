@@ -17,5 +17,6 @@ router.get("/check-auth", authenticateToken, (req, res) => {
 });
 router.get("/api/auth/me", UserController.getCurrentUser);
 
+router.get("/all-users", authenticateToken, UserController.getAllUsers);
 
 module.exports = router;
